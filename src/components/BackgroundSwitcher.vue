@@ -2,6 +2,7 @@
     <div class="background-container">
         <img v-if="type === 'image'" :src="source" alt="background" />
         <video v-else-if="type === 'video'" :src="source" autoplay loop muted></video>
+        <div class="overlayGradient"></div>
     </div>
 </template>
 
@@ -40,5 +41,18 @@ export default defineComponent({
     object-fit: cover;
     width: 100%;
     height: 100%;
+}
+
+.overlayGradient {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-image: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
+        radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
+    transform: translateZ(0px);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transition: all 0.07s ease-out 0s;
 }
 </style>

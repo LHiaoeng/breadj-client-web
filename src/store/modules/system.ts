@@ -8,7 +8,7 @@ export interface systemStateType {
 const moduleApp: Module<systemStateType, rootStateType> = {
     namespaced: true,
     state: () => ({
-        title: 'vue3'
+        title: '面包街'
     })
 }
 

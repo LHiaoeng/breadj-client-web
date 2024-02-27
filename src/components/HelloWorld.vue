@@ -1,17 +1,23 @@
 <template>
     <a-layout class="mainLayout">
         <background-switcher source="./animated-bilgewater.webm" type="video" />
+        <!--        <background-switcher source="./bg0.jpg" type="image" />-->
         <a-layout-header :style="headerStyle"></a-layout-header>
         <a-layout-content :style="contentStyle">
             <a-input-search
+                class="searchBox"
                 v-model:value="keyword"
                 enter-button
                 @search="onSearch"
-                size="large"
-                class="searchBox"
+                :size="searchInputSize"
+                allow-clear
             >
                 <template #addonBefore>
-                    <a-select v-model:value="selectedEngine" style="width: 90px">
+                    <a-select
+                        v-model:value="selectedEngine"
+                        :size="searchInputSize"
+                        class="engine-select"
+                    >
                         <a-select-option
                             v-for="(engine, key) in engines"
                             :key="key"
@@ -22,7 +28,7 @@
                 </template>
             </a-input-search>
         </a-layout-content>
-        <a-layout-footer :style="footerStyle"></a-layout-footer>
+        <a-layout-footer :style="footerStyle"> </a-layout-footer>
     </a-layout>
 </template>
 <script setup lang="ts">
@@ -32,6 +38,7 @@ import BackgroundSwitcher from './BackgroundSwitcher.vue'
 
 const keyword = ref<string>('')
 const selectedEngine = ref<string>('baidu')
+const searchInputSize = ref<string>('large')
 
 interface Engine {
     id: string
@@ -50,6 +57,10 @@ const engines: Array<Engine> = [
 ]
 
 const onSearch = (searchValue: string) => {
+    if (searchValue === '') {
+        return
+    }
+
     const usrEngine = engines.find((engine) => engine.id === selectedEngine.value)
 
     if (usrEngine) {
@@ -72,7 +83,8 @@ const contentStyle: CSSProperties = {
     minHeight: 120,
     lineHeight: '120px',
     height: '100%',
-    flex: 1
+    flex: 1,
+    position: 'relative'
 }
 
 const footerStyle: CSSProperties = {
@@ -88,11 +100,18 @@ const footerStyle: CSSProperties = {
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    background: white;
 }
 
 .searchBox {
     width: 600px;
     margin-top: 50px;
+
+    .engine-select {
+        width: 100px;
+    }
+
+    :deep(.ant-input-group-addon) {
+        background: white;
+    }
 }
 </style>
