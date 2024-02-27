@@ -8,7 +8,7 @@
  */
 
 import Axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
-import { ElNotification } from 'element-plus'
+import { message } from 'ant-design-vue'
 import Mock from 'mockjs'
 
 // 接口返回统一格式
@@ -74,27 +74,18 @@ axios.interceptors.response.use(
         }
 
         // 弹出提示
-        ElNotification.error({
-            title: '提示',
-            message: response.data.msg
-        })
+        message.error('response.data.msg')
 
         return Promise.reject(response.data)
     },
     (error) => {
         if (error.response && error.response.data) {
             const msg = error.response.data.message
-            ElNotification.error({
-                title: '提示',
-                message: msg
-            })
+            message.error(msg)
             // eslint-disable-next-line no-console
             console.error(`[Axios Error]`, error.response)
         } else {
-            ElNotification.error({
-                title: '提示',
-                message: error
-            })
+            message.error(error)
         }
         return Promise.reject(error)
     }

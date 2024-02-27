@@ -3,6 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import viteCompression from 'vite-plugin-compression'
 import importToCDN, { autoComplete } from 'vite-plugin-cdn-import'
+import Components from 'unplugin-vue-components/vite'
+import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -23,30 +25,17 @@ export default defineConfig(({ mode, command }) => {
                 algorithm: 'gzip',
                 ext: '.gz'
             }),
-            importToCDN({
-                prodUrl: '//unpkg.com/{name}@{version}/{path}',
-                modules: [
-                    autoComplete('vue'),
-                    {
-                        name: 'vue-router',
-                        var: 'VueRouter',
-                        path: '//unpkg.com/vue-router@4.0.12/dist/vue-router.global.js'
-                    },
-                    {
-                        name: 'vuex',
-                        var: 'Vuex',
-                        path: '//unpkg.com/vuex@4.0.2/dist/vuex.global.js'
-                    },
-                    {
-                        name: 'element-plus',
-                        var: 'ElementPlus',
-                        path: '//unpkg.com/element-plus@1.3.0-beta.9/dist/index.full.min.js'
-                    }
+            Components({
+                resolvers: [
+                    AntDesignVueResolver({
+                        importStyle: false // css in js
+                    })
                 ]
             })
         ])
     }
     return {
+        base: './',
         envDir: resolve(__dirname, 'env'),
         plugins,
         resolve: {

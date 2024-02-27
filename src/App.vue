@@ -5,24 +5,9 @@ import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <div id="dialog"></div>
     <HelloWorld ref="hello" />
 
     <router-view></router-view>
 </template>
 
-<style lang="scss">
-#app {
-    margin-top: 60px;
-    color: #2c3e50;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    text-align: center;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-html {
-    background-color: $bg-color;
-}
-</style>
+<style lang="scss"></style>
