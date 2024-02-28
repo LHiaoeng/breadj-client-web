@@ -11,6 +11,7 @@
                 @search="onSearch"
                 :size="searchInputSize"
                 allow-clear
+                ref="searchInputRef"
             >
                 <template #addonBefore>
                     <a-select
@@ -33,12 +34,20 @@
 </template>
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import BackgroundSwitcher from './BackgroundSwitcher.vue'
 
 const keyword = ref<string>('')
 const selectedEngine = ref<string>('baidu')
 const searchInputSize = ref<string>('large')
+
+// 定义 ref 来引用输入框
+const searchInputRef = ref(null)
+
+// 在组件挂载完成后，自动聚焦输入框
+onMounted(() => {
+    searchInputRef.value.focus()
+})
 
 interface Engine {
     id: string
@@ -57,9 +66,9 @@ const engines: Array<Engine> = [
 ]
 
 const onSearch = (searchValue: string) => {
-    if (searchValue === '') {
-        return
-    }
+    // if (searchValue === '') {
+    //     return
+    // }
 
     const usrEngine = engines.find((engine) => engine.id === selectedEngine.value)
 
