@@ -1,15 +1,11 @@
-import { Module } from 'vuex'
-import { rootStateType } from '@/store'
+import { defineStore } from 'pinia'
 
-export interface systemStateType {
+export interface SystemStateType {
     title: string
 }
 
-const moduleApp: Module<systemStateType, rootStateType> = {
-    namespaced: true,
-    state: () => ({
+export const useSystemStore = defineStore('system', {
+    state: (): SystemStateType => ({
         title: '面包街'
     })
-}
-
-export default moduleApp
+})

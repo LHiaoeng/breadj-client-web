@@ -1,4 +1,5 @@
-import { createStore } from 'vuex'
+import { createPinia } from 'pinia'
+import { createPersistedState } from 'pinia-plugin-persistedstate'
 
 // 批量引入其他module，
 const files = import.meta.globEager('./modules/*.ts') // vite的写法
@@ -16,6 +17,18 @@ keys.forEach((key) => {
 // 全局的state,暂无
 export interface rootStateType {}
 
-export default createStore({
-    modules
-})
+const store = createPinia()
+
+store
+    .use(
+        createPersistedState({
+            serializer: {
+                // 指定参数序列化器
+                serialize: JSON.stringify,
+                deserialize: JSON.parse
+            }
+        })
+    )
+    .use(modules)
+
+export default store
