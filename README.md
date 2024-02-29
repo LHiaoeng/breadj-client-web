@@ -37,7 +37,7 @@
 |   |   ├── index.ts        // store 配置文件
 |   |   ├── index.d.ts      // 声明文件
 |   |   └── modules
-|   |       └── system.ts   // 自己的业务模块，这里写|个示例
+|   |       └── SystemStore.ts   // 自己的业务模块，这里写|个示例
 |   ├── styles/             // 样式文件
 |   ├── App.vue
 |   ├── env.d.ts
@@ -219,7 +219,7 @@ pnpm add vuex@next
     ├── store/
         ├── index.ts  // store 配置文件
         ├── modules
-            ├── system.ts // 系统模块
+            ├── SystemStore.ts // 系统模块
 ```
 
 `src/store/index.ts`内容如下
@@ -243,7 +243,7 @@ export default createStore({
 })
 ```
 
-`src/store/modules/system.ts`如下
+`src/store/modules/SystemStore.ts`如下
 
 ```ts
 export default {

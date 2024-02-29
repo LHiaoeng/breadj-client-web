@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import MainLayout from './components/MainLayout.vue'
 </script>
 
 <template>
-    <HelloWorld ref="hello" />
+    <MainLayout ref="hello" />
 
     <router-view></router-view>
 </template>

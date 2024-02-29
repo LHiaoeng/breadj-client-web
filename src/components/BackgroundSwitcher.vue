@@ -1,29 +1,98 @@
 <template>
-    <div class="background-container">
+    <div class="background-container" v-if="source">
         <img v-if="type === 'image'" :src="source" alt="background" />
-        <video v-else-if="type === 'video'" :src="source" autoplay loop muted></video>
-        <div class="overlayGradient"></div>
+        <video
+            ref="backgroundVideoRef"
+            v-else-if="type === 'video'"
+            :src="source"
+            autoplay
+            loop
+            muted
+        ></video>
+        <div class="museumCard" v-if="!isShowMainLayout">
+            <div class="museumCardCreditsContainer">
+                <div class="museumCardTitleContainer">
+                    <a class="museumCardTitle">比尔吉沃特</a>
+                    <p class="museumCardCredits backgroundGallery">英雄联盟</p>
+                </div>
+                <div class="copyrightContainer">© 版权</div>
+            </div>
+            <a-flex class="container" gap="small" justify="flex-end">
+                <a-button
+                    :size="btnSize"
+                    type="text"
+                    :title="isVideoPlay ? '暂停视频' : '播放背景'"
+                >
+                    <PlayCircleOutlined v-if="!isVideoPlay" />
+                    <PauseCircleOutlined v-if="isVideoPlay"
+                /></a-button>
+                <a-button :size="btnSize" type="text" title="编辑背景"
+                    ><PictureOutlined
+                /></a-button>
+                <a-button :size="btnSize" type="text" title="退出完整视图" @click="toggleMainLayout"
+                    ><ShrinkOutlined />
+                </a-button>
+            </a-flex>
+        </div>
     </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, watch } from 'vue'
 
-export default defineComponent({
-    name: 'BackgroundSwitcher',
-    props: {
-        type: {
-            type: String,
-            required: true,
-            validator: (value: string) => ['image', 'video'].includes(value)
-        },
-        source: {
-            type: String,
-            required: true,
-            default: '@/assets/animated-bilgewater.webm'
+import { useBackgroundStore } from '@/store/modules/BackgroundStore'
+import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
+import { storeToRefs } from 'pinia'
+import {
+    PauseCircleOutlined,
+    PictureOutlined,
+    PlayCircleOutlined,
+    ShrinkOutlined
+} from '@ant-design/icons-vue'
+
+type SizeType = 'small' | 'middle' | 'large' | undefined
+
+const btnSize = ref<SizeType | 'customize'>('small')
+
+const store = useBackgroundStore()
+const mainLayoutStore = useMainLayoutStore()
+
+const { type, source, isVideoPlay } = storeToRefs(store)
+const { isShowMainLayout } = storeToRefs(mainLayoutStore)
+
+const backgroundVideoRef = ref<HTMLVideoElement | null>(null)
+
+// 监听背景视频播放状态
+watch(isVideoPlay, (newValue) => {
+    if (newValue) {
+        try {
+            backgroundVideoRef.value.play()
+        } catch (error) {
+            console.error('Error playing video:', error)
+        }
+    } else {
+        try {
+            backgroundVideoRef.value.pause()
+        } catch (error) {
+            console.error('Error pausing video:', error)
         }
     }
 })
+
+onMounted(() => {
+    if (backgroundVideoRef.value) {
+        backgroundVideoRef.value.addEventListener('play', () => {
+            isVideoPlay.value = true
+        })
+        backgroundVideoRef.value.addEventListener('pause', () => {
+            isVideoPlay.value = false
+        })
+    }
+})
+
+const toggleMainLayout = () => {
+    isShowMainLayout.value = !isShowMainLayout.value
+}
 </script>
 
 <style scoped lang="scss">
@@ -43,16 +112,76 @@ export default defineComponent({
     height: 100%;
 }
 
-.overlayGradient {
-    width: 100%;
-    height: 100%;
+.museumCard {
+    color: rgb(255, 255, 255);
+    opacity: 1;
     position: absolute;
-    top: 0;
-    background-image: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
-        radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
-    transform: translateZ(0px);
-    backface-visibility: hidden;
-    perspective: 1000px;
-    transition: all 0.07s ease-out 0s;
+    transition: opacity 0.2s ease 0s;
+    z-index: 100;
+    left: initial;
+    right: 12px;
+    bottom: 7px;
+
+    .museumCardCreditsContainer {
+        background: rgba(0, 0, 0, 0.77);
+        border-bottom: 1px solid transparent;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 400;
+        margin-bottom: 10px;
+        max-width: 384px;
+        padding: 8px 4px;
+
+        .museumCardTitleContainer {
+            background: rgba(0, 0, 0, 0.77);
+            border-bottom: 1px solid transparent;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            max-width: 384px;
+            padding: 0px 12px;
+
+            .museumCardTitle {
+                display: inline-block;
+                width: 362px;
+                color: rgb(255, 255, 255);
+                font-family: inherit;
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 24px;
+                margin: 4px 0px;
+                text-decoration: none;
+            }
+
+            .museumCardTitle:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+            .museumCardCredits {
+                color: rgba(255, 255, 255, 0.54);
+                font-size: 13px;
+                margin: 10px 0px 12px !important;
+            }
+        }
+
+        .copyrightContainer {
+            color: rgba(255, 255, 255, 0.54);
+            padding-left: 12px;
+            padding-bottom: 10px;
+        }
+    }
+
+    button {
+        color: white;
+        width: auto;
+    }
+    button:hover {
+        color: white;
+        background: rgba(240, 240, 240, 0.2);
+    }
 }
 </style>

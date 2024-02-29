@@ -1,7 +1,7 @@
 <template>
-    <a-layout class="mainLayout">
-        <background-switcher source="./animated-bilgewater.webm" type="video" />
-        <!--        <background-switcher source="./bg0.jpg" type="image" />-->
+    <background-switcher />
+    <a-layout class="mainLayout" v-if="isShowMainLayout">
+        <div class="overlayGradient"></div>
         <a-layout-header :style="headerStyle"></a-layout-header>
         <a-layout-content :style="contentStyle">
             <a-input-search
@@ -30,16 +30,24 @@
             </a-input-search>
         </a-layout-content>
         <a-layout-footer :style="footerStyle"> </a-layout-footer>
+        <FloatButtonGroup class="floatButtonGroup" />
     </a-layout>
 </template>
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
+import type { SizeType } from 'ant-design-vue/es/config-provider'
 import { ref, onMounted } from 'vue'
+import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
+import { storeToRefs } from 'pinia'
+import FloatButtonGroup from '@/components/FloatButtonGroup.vue'
 import BackgroundSwitcher from './BackgroundSwitcher.vue'
+
+const store = useMainLayoutStore()
+const { isShowMainLayout } = storeToRefs(store)
 
 const keyword = ref<string>('')
 const selectedEngine = ref<string>('baidu')
-const searchInputSize = ref<string>('large')
+const searchInputSize = ref<SizeType>('large')
 
 // 定义 ref 来引用输入框
 const searchInputRef = ref(null)
@@ -111,6 +119,19 @@ const footerStyle: CSSProperties = {
     height: 100vh;
 }
 
+.overlayGradient {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-image: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
+        radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
+    transform: translateZ(0px);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    transition: all 0.07s ease-out 0s;
+}
+
 .searchBox {
     width: 600px;
     margin-top: 50px;
@@ -122,5 +143,15 @@ const footerStyle: CSSProperties = {
     :deep(.ant-input-group-addon) {
         background: white;
     }
+}
+
+.floatButtonGroup {
+    position: fixed;
+    bottom: 7px;
+    right: 12px;
+    z-index: 100;
+    //width: 30px;
+    //color: rgb(255, 255, 255);
+    transition: opacity 0.2s ease 0s;
 }
 </style>
