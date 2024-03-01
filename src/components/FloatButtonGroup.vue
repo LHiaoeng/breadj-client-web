@@ -26,6 +26,8 @@ const togglePlayPause = () => {
 const toggleOverlay = () => {
     isShowMainLayout.value = !isShowMainLayout.value
 }
+
+const getPlayPauseIcon = () => (isVideoPlay.value ? PauseCircleOutlined : PlayCircleOutlined)
 </script>
 
 <template>
@@ -36,9 +38,8 @@ const toggleOverlay = () => {
             @click="togglePlayPause"
             :title="isVideoPlay ? '暂停视频' : '播放背景'"
         >
-            <PlayCircleOutlined v-if="!isVideoPlay" />
-            <PauseCircleOutlined v-if="isVideoPlay"
-        /></a-button>
+            <component :is="getPlayPauseIcon()" />
+        </a-button>
         <a-button :size="btnSize" type="text" title="编辑背景"><PictureOutlined /></a-button>
         <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
             ><ArrowsAltOutlined

@@ -1,6 +1,6 @@
 <template>
     <background-switcher />
-    <a-layout class="mainLayout" v-if="isShowMainLayout">
+    <a-layout class="mainLayout" v-show="isShowMainLayout">
         <div class="overlayGradient"></div>
         <a-layout-header :style="headerStyle"></a-layout-header>
         <a-layout-content :style="contentStyle">
@@ -34,9 +34,8 @@
     </a-layout>
 </template>
 <script setup lang="ts">
-import type { CSSProperties } from 'vue'
+import { CSSProperties, onUpdated, ref, onMounted, Directive } from 'vue'
 import type { SizeType } from 'ant-design-vue/es/config-provider'
-import { ref, onMounted } from 'vue'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
 import { storeToRefs } from 'pinia'
 import FloatButtonGroup from '@/components/FloatButtonGroup.vue'
@@ -57,6 +56,10 @@ onMounted(() => {
     searchInputRef.value.focus()
 })
 
+onUpdated(() => {
+    searchInputRef.value.focus()
+})
+
 interface Engine {
     id: string
     name: string
@@ -73,10 +76,10 @@ const engines: Array<Engine> = [
     { id: 'baidu', name: '百度', url: 'https://www.baidu.com/s?wd=' }
 ]
 
-const onSearch = (searchValue: string) => {
-    // if (searchValue === '') {
-    //     return
-    // }
+const onSearch = (searchValue: string, e: MouseEvent) => {
+    if (e.type === 'click' && e.target instanceof HTMLInputElement) {
+        return
+    }
 
     const usrEngine = engines.find((engine) => engine.id === selectedEngine.value)
 
@@ -88,7 +91,6 @@ const onSearch = (searchValue: string) => {
 
 const headerStyle: CSSProperties = {
     textAlign: 'center',
-    color: '# fff',
     height: 64,
     paddingInline: 50,
     lineHeight: '64px',
@@ -106,7 +108,6 @@ const contentStyle: CSSProperties = {
 
 const footerStyle: CSSProperties = {
     textAlign: 'center',
-    color: '#fff',
     background: 'white'
 }
 </script>

@@ -12,16 +12,27 @@
         <div class="museumCard" v-if="!isShowMainLayout">
             <div class="museumCardCreditsContainer">
                 <div class="museumCardTitleContainer">
-                    <a class="museumCardTitle">比尔吉沃特</a>
-                    <p class="museumCardCredits backgroundGallery">英雄联盟</p>
+                    <a
+                        class="museumCardTitle"
+                        href="https://yz.lol.qq.com/zh_CN/region/bilgewater/"
+                        target="_blank"
+                        >比尔吉沃特<ExportOutlined
+                    /></a>
+                    <p class="museumCardCredits backgroundGallery">
+                        在远离大陆的蓝焰群岛边缘，坐落着独一无二的港城比尔吉沃特。海蛇猎人、码头帮派和走私偷运者从已知世界的四面八方来到这里安家落户。在这里，富可敌国或是家破人亡都只在转瞬之间。对于那些逃避审判、债务和迫害的人，这个城市能让他们重获新生，因为在比尔吉沃特的蜿蜒街路上，没人会在乎你的过去。话虽如此，每当拂晓之际，粗心大意之人都会漂在港湾中，钱袋空空，喉头见血......
+                    </p>
                 </div>
-                <div class="copyrightContainer">© 版权</div>
+                <div class="copyrightContainer">
+                    © 版权
+                    <a href="https://lol.qq.com/" target="_blank">英雄联盟<ExportOutlined /></a>
+                </div>
             </div>
             <a-flex class="container" gap="small" justify="flex-end">
                 <a-button
                     :size="btnSize"
                     type="text"
                     :title="isVideoPlay ? '暂停视频' : '播放背景'"
+                    @click="togglePlayPause"
                 >
                     <PlayCircleOutlined v-if="!isVideoPlay" />
                     <PauseCircleOutlined v-if="isVideoPlay"
@@ -47,7 +58,8 @@ import {
     PauseCircleOutlined,
     PictureOutlined,
     PlayCircleOutlined,
-    ShrinkOutlined
+    ShrinkOutlined,
+    ExportOutlined
 } from '@ant-design/icons-vue'
 
 type SizeType = 'small' | 'middle' | 'large' | undefined
@@ -78,6 +90,10 @@ watch(isVideoPlay, (newValue) => {
         }
     }
 })
+
+const togglePlayPause = () => {
+    isVideoPlay.value = !isVideoPlay.value
+}
 
 onMounted(() => {
     if (backgroundVideoRef.value) {
@@ -172,6 +188,16 @@ const toggleMainLayout = () => {
             color: rgba(255, 255, 255, 0.54);
             padding-left: 12px;
             padding-bottom: 10px;
+
+            a {
+                color: rgba(255, 255, 255, 0.54);
+                text-decoration: none;
+            }
+
+            a:hover {
+                cursor: pointer;
+                text-decoration: underline;
+            }
         }
     }
 
@@ -182,6 +208,10 @@ const toggleMainLayout = () => {
     button:hover {
         color: white;
         background: rgba(240, 240, 240, 0.2);
+    }
+
+    a .anticon {
+        margin-left: 2px;
     }
 }
 </style>
