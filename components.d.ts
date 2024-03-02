@@ -6,20 +6,20 @@
 export {}
 
 declare module 'vue' {
-  export interface GlobalComponents {
-    AButton: typeof import('ant-design-vue/es')['Button']
-    AFlex: typeof import('ant-design-vue/es')['Flex']
-    AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
-    ALayout: typeof import('ant-design-vue/es')['Layout']
-    ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent']
-    ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter']
-    ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader']
-    ASelect: typeof import('ant-design-vue/es')['Select']
-    ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
-    BackgroundSwitcher: typeof import('./src/components/BackgroundSwitcher.vue')['default']
-    FloatButtonGroup: typeof import('./src/components/FloatButtonGroup.vue')['default']
-    MainLayout: typeof import('./src/components/MainLayout.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
-  }
+    export interface GlobalComponents {
+        AButton: typeof import('ant-design-vue/es')['Button']
+        AFlex: typeof import('ant-design-vue/es')['Flex']
+        AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
+        ALayout: typeof import('ant-design-vue/es')['Layout']
+        ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent']
+        ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter']
+        ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader']
+        ASelect: typeof import('ant-design-vue/es')['Select']
+        ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+        BackgroundSwitcher: typeof import('./src/views/home/component/Background.vue')['default']
+        FloatButtonGroup: typeof import('./src/views/home/component/FloatButtonGroup.vue')['default']
+        MainLayout: typeof import('./src/components/MainLayout.vue')['default']
+        RouterLink: typeof import('vue-router')['RouterLink']
+        RouterView: typeof import('vue-router')['RouterView']
+    }
 }

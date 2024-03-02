@@ -27,23 +27,7 @@
                     <a href="https://lol.qq.com/" target="_blank">英雄联盟<ExportOutlined /></a>
                 </div>
             </div>
-            <a-flex class="container" gap="small" justify="flex-end">
-                <a-button
-                    :size="btnSize"
-                    type="text"
-                    :title="isVideoPlay ? '暂停视频' : '播放背景'"
-                    @click="togglePlayPause"
-                >
-                    <PlayCircleOutlined v-if="!isVideoPlay" />
-                    <PauseCircleOutlined v-if="isVideoPlay"
-                /></a-button>
-                <a-button :size="btnSize" type="text" title="编辑背景"
-                    ><PictureOutlined
-                /></a-button>
-                <a-button :size="btnSize" type="text" title="退出完整视图" @click="toggleMainLayout"
-                    ><ShrinkOutlined />
-                </a-button>
-            </a-flex>
+            <FloatButtonGroup />
         </div>
     </div>
 </template>
@@ -53,6 +37,7 @@ import { ref, onMounted, watch } from 'vue'
 
 import { useBackgroundStore } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
+import FloatButtonGroup from '@/views/home/component/FloatButtonGroup.vue'
 import { storeToRefs } from 'pinia'
 import {
     PauseCircleOutlined,

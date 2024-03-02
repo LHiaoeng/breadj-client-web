@@ -4,7 +4,8 @@ import {
     PlayCircleOutlined,
     PauseCircleOutlined,
     PictureOutlined,
-    ArrowsAltOutlined
+    ArrowsAltOutlined,
+    ShrinkOutlined
 } from '@ant-design/icons-vue'
 import { useBackgroundStore } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
@@ -28,6 +29,7 @@ const toggleOverlay = () => {
 }
 
 const getPlayPauseIcon = () => (isVideoPlay.value ? PauseCircleOutlined : PlayCircleOutlined)
+const getBackgroundShowIcon = () => (isShowMainLayout.value ? ArrowsAltOutlined : ShrinkOutlined)
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const getPlayPauseIcon = () => (isVideoPlay.value ? PauseCircleOutlined : PlayCi
         </a-button>
         <a-button :size="btnSize" type="text" title="编辑背景"><PictureOutlined /></a-button>
         <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
-            ><ArrowsAltOutlined
+            ><component :is="getBackgroundShowIcon()"
         /></a-button>
     </a-flex>
 </template>
