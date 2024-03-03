@@ -27,7 +27,7 @@
                     <a href="https://lol.qq.com/" target="_blank">英雄联盟<ExportOutlined /></a>
                 </div>
             </div>
-            <FloatButtonGroup />
+            <FloatButtonGroup justify="flex-end" />
         </div>
     </div>
 </template>

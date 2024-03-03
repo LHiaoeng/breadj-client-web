@@ -18,7 +18,7 @@ const { isShowMainLayout } = storeToRefs(store)
         <Header class="header" />
         <Content class="content" />
         <Footer />
-        <FloatButtonGroup class="floatButtonGroup" />
+        <FloatButtonGroup class="floatButtonGroup" :vertical="true" />
     </a-flex>
 </template>
 
