@@ -14,11 +14,11 @@ import { storeToRefs } from 'pinia'
 import BackgroundGallery from '@/views/home/component/BackgroundGallery.vue'
 
 defineProps<{
-    vertical: {
-        type: Boolean
+    vertical?: {
+        type: boolean
         default: false
     }
-    justify: {
+    justify?: {
         type: String
         default: 'normal'
     }
@@ -82,8 +82,8 @@ const downloadFile = () => {
         <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
             ><component :is="getBackgroundShowIcon()"
         /></a-button>
-        <a-modal v-model:open="open" :footer="null" width="800px">
-            <BackgroundGallery />
+        <a-modal v-model:open="open" :footer="null" width="830px">
+            <BackgroundGallery :modalOpen="open" />
             <template #title>
                 <div class="backgroundGalleryHeading">自定义背景</div>
             </template>

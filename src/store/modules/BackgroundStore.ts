@@ -32,7 +32,8 @@ export const useBackgroundStore = defineStore('BackgroundStore', {
     state: () => ({
         isVideoPlay: false,
         background: {} as Background,
-        backgroundExpire: 0 // 过期时间。-1:不过期
+        backgroundExpire: 0, // 过期时间。-1:不过期
+        bingBackgroundList: [] as Background[]
     }),
     actions: {
         setVideoPlay(isVideoPlay: boolean) {
@@ -43,6 +44,9 @@ export const useBackgroundStore = defineStore('BackgroundStore', {
         },
         setBackgroundExpire(expire: number) {
             this.backgroundExpire = expire
+        },
+        setBingBackgroundList(bingBackgroundList: Background[]) {
+            this.bingBackgroundList = bingBackgroundList
         }
     },
     persist: true
