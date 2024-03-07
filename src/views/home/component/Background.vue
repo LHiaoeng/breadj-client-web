@@ -1,10 +1,10 @@
 <template>
-    <div class="background-container" v-if="source">
-        <img v-if="type === 'image'" :src="source" alt="background" />
+    <div class="background-container" v-if="background">
+        <img v-if="background.type === 'image'" :src="background.url" alt="background" />
         <video
             ref="backgroundVideoRef"
-            v-else-if="type === 'video'"
-            :src="source"
+            v-else-if="background.type === 'video'"
+            :src="background.url"
             autoplay
             loop
             muted
@@ -12,19 +12,16 @@
         <div class="museumCard" v-if="!isShowMainLayout">
             <div class="museumCardCreditsContainer">
                 <div class="museumCardTitleContainer">
-                    <a
-                        class="museumCardTitle"
-                        href="https://yz.lol.qq.com/zh_CN/region/bilgewater/"
-                        target="_blank"
-                        >比尔吉沃特<ExportOutlined
+                    <a class="museumCardTitle" :href="background.titleLink" target="_blank"
+                        >{{ background.title }}<ExportOutlined
                     /></a>
-                    <p class="museumCardCredits backgroundGallery">
-                        在远离大陆的蓝焰群岛边缘，坐落着独一无二的港城比尔吉沃特。海蛇猎人、码头帮派和走私偷运者从已知世界的四面八方来到这里安家落户。在这里，富可敌国或是家破人亡都只在转瞬之间。对于那些逃避审判、债务和迫害的人，这个城市能让他们重获新生，因为在比尔吉沃特的蜿蜒街路上，没人会在乎你的过去。话虽如此，每当拂晓之际，粗心大意之人都会漂在港湾中，钱袋空空，喉头见血......
-                    </p>
+                    <p class="museumCardCredits backgroundGallery">{{ background.description }}</p>
                 </div>
                 <div class="copyrightContainer">
                     © 版权
-                    <a href="https://lol.qq.com/" target="_blank">英雄联盟<ExportOutlined /></a>
+                    <a :href="background.copyrightLink" target="_blank"
+                        >{{ background.copyright }}<ExportOutlined
+                    /></a>
                 </div>
             </div>
             <FloatButtonGroup justify="flex-end" />
@@ -35,26 +32,18 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 
-import { useBackgroundStore } from '@/store/modules/BackgroundStore'
+import { BingRequest, getBingImageList } from '@/api/background/bingService'
+import { useBackgroundStore, Background } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
 import FloatButtonGroup from '@/views/home/component/FloatButtonGroup.vue'
 import { storeToRefs } from 'pinia'
-import {
-    PauseCircleOutlined,
-    PictureOutlined,
-    PlayCircleOutlined,
-    ShrinkOutlined,
-    ExportOutlined
-} from '@ant-design/icons-vue'
+import { ExportOutlined } from '@ant-design/icons-vue'
+import dayjs from 'dayjs'
 
-type SizeType = 'small' | 'middle' | 'large' | undefined
-
-const btnSize = ref<SizeType | 'customize'>('small')
-
-const store = useBackgroundStore()
+const backgroundStore = useBackgroundStore()
 const mainLayoutStore = useMainLayoutStore()
 
-const { type, source, isVideoPlay } = storeToRefs(store)
+const { background, isVideoPlay, backgroundExpire } = storeToRefs(backgroundStore)
 const { isShowMainLayout } = storeToRefs(mainLayoutStore)
 
 const backgroundVideoRef = ref<HTMLVideoElement | null>(null)
@@ -76,11 +65,41 @@ watch(isVideoPlay, (newValue) => {
     }
 })
 
-const togglePlayPause = () => {
-    isVideoPlay.value = !isVideoPlay.value
+const defaultBackground: Background = {
+    type: 'video',
+    url: './animated-bilgewater.webm',
+    title: '比尔吉沃特',
+    titleLink: 'https://yz.lol.qq.com/zh_CN/region/bilgewater/',
+    copyright: '英雄联盟',
+    copyrightLink: 'https://lol.qq.com/',
+    description:
+        '在远离大陆的蓝焰群岛边缘，坐落着独一无二的港城比尔吉沃特。海蛇猎人、码头帮派和走私偷运者从已知世界的四面八方来到这里安家落户。在这里，富可敌国或是家破人亡都只在转瞬之间。对于那些逃避审判、债务和迫害的人，这个城市能让他们重获新生，因为在比尔吉沃特的蜿蜒街路上，没人会在乎你的过去。话虽如此，每当拂晓之际，粗心大意之人都会漂在港湾中，钱袋空空，喉头见血......\n'
 }
 
 onMounted(() => {
+    const req: BingRequest = {
+        format: 'js',
+        idx: -1,
+        n: 1,
+        uhd: 1,
+        uhdwidth: 3840,
+        uhdheight: 2160
+    }
+
+    if (backgroundExpire.value !== -1) {
+        const nowTimestamp = Date.now()
+
+        if (backgroundExpire.value < nowTimestamp) {
+            getBingImageList(req).then((res: Background[]) => {
+                background.value = res.length > 0 ? res[0] : defaultBackground
+            })
+
+            // 当天23:59:59 过期
+            const endOfDayTimestamp = dayjs(new Date()).endOf('day').valueOf()
+            backgroundStore.setBackgroundExpire(endOfDayTimestamp)
+        }
+    }
+
     if (backgroundVideoRef.value) {
         backgroundVideoRef.value.addEventListener('play', () => {
             isVideoPlay.value = true
@@ -90,10 +109,6 @@ onMounted(() => {
         })
     }
 })
-
-const toggleMainLayout = () => {
-    isShowMainLayout.value = !isShowMainLayout.value
-}
 </script>
 
 <style scoped lang="scss">

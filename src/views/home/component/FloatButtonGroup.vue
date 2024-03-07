@@ -5,7 +5,8 @@ import {
     PauseCircleOutlined,
     PictureOutlined,
     ArrowsAltOutlined,
-    ShrinkOutlined
+    ShrinkOutlined,
+    DownloadOutlined
 } from '@ant-design/icons-vue'
 import { useBackgroundStore } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
@@ -29,7 +30,7 @@ const btnSize = ref<SizeType | 'customize'>('small')
 
 const store = useBackgroundStore()
 const mainLayoutStore = useMainLayoutStore()
-const { isVideoPlay, type } = storeToRefs(store)
+const { isVideoPlay, background } = storeToRefs(store)
 const { isShowMainLayout } = storeToRefs(mainLayoutStore)
 
 const togglePlayPause = () => {
@@ -43,34 +44,35 @@ const toggleOverlay = () => {
 const getPlayPauseIcon = () => (isVideoPlay.value ? PauseCircleOutlined : PlayCircleOutlined)
 const getBackgroundShowIcon = () => (isShowMainLayout.value ? ArrowsAltOutlined : ShrinkOutlined)
 
-const loading = ref<boolean>(false)
 const open = ref<boolean>(false)
 
 const showModal = () => {
     open.value = true
 }
 
-const handleOk = () => {
-    loading.value = true
-    setTimeout(() => {
-        loading.value = false
-        open.value = false
-    }, 2000)
-}
-
-const handleCancel = () => {
-    open.value = false
+const downloadFile = () => {
+    const a = document.createElement('a')
+    // const urlPath = window.URL.createObjectURL(new Blob([source.value], { type: 'video/mp4' }))
+    a.href = background.value.url
+    a.target = '_blank'
+    a.download = background.value.title
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
 }
 </script>
 
 <template>
     <a-flex class="container" gap="small" :vertical="vertical" :justify="justify">
+        <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
+            ><DownloadOutlined
+        /></a-button>
         <a-button
             :size="btnSize"
             type="text"
             @click="togglePlayPause"
             :title="isVideoPlay ? '暂停视频' : '播放背景'"
-            v-if="type === 'video'"
+            v-if="background.type === 'video'"
         >
             <component :is="getPlayPauseIcon()" />
         </a-button>
@@ -80,8 +82,11 @@ const handleCancel = () => {
         <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
             ><component :is="getBackgroundShowIcon()"
         /></a-button>
-        <a-modal v-model:open="open" title="自定义背景" @ok="handleOk" :footer="null" width="800px">
+        <a-modal v-model:open="open" :footer="null" width="800px">
             <BackgroundGallery />
+            <template #title>
+                <div class="backgroundGalleryHeading">自定义背景</div>
+            </template>
         </a-modal>
     </a-flex>
 </template>
@@ -96,5 +101,10 @@ const handleCancel = () => {
         color: white;
         background: rgba(240, 240, 240, 0.2);
     }
+}
+
+.backgroundGalleryHeading {
+    font-weight: 600;
+    font-size: 24px;
 }
 </style>

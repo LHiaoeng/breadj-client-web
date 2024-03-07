@@ -6,7 +6,10 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: 'home',
-        component: home
+        component: home,
+        meta: {
+            title: `${import.meta.env.VITE_APP_TITLE}`
+        }
     }
 ]
 const router = createRouter({

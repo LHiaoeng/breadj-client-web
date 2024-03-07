@@ -6,3 +6,8 @@ declare module '*.vue' {
     const component: DefineComponent<{}, {}, any>
     export default component
 }
+
+declare module 'jsonp'
+declare interface Window {
+    sug: (res: any) => void
+}

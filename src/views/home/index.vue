@@ -27,12 +27,13 @@ const { isShowMainLayout } = storeToRefs(store)
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+    overflow: hidden;
+    //height: 100vh;
 
     .overlayGradient {
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         top: 0;
         background-image: radial-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 100%),
             radial-gradient(rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.3) 166%);
@@ -50,9 +51,6 @@ const { isShowMainLayout } = storeToRefs(store)
     .content {
         position: relative;
         flex: 1;
-    }
-
-    .footer {
     }
 
     .floatButtonGroup {

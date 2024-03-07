@@ -42,7 +42,12 @@ axios.interceptors.request.use(
              * 开启mock时需要去掉mock路径,不能影响正常接口了。
              * 如果碰巧你接口是 /api/mock/xxx这种,那VITE_REQUEST_BASE_URL就配置/api/mock/mock吧
              */
-            url = import.meta.env.VITE_REQUEST_BASE_URL.replace(/\/mock$/, '') + config.url
+
+            if (config.url.includes('/bing-api')) {
+                url = config.url
+            } else {
+                url = import.meta.env.VITE_REQUEST_BASE_URL.replace(/\/mock$/, '') + config.url
+            }
         }
 
         // 这里还可以添加token等等
@@ -69,23 +74,23 @@ axios.interceptors.response.use(
          * 根据你的项目实际情况来对 response 和 error 做处理
          * 这里对 response 和 error 不做任何处理，直接返回
          */
-        if (response.data.success) {
+        if (response.data) {
             return response.data
         }
 
         // 弹出提示
-        message.error('response.data.msg')
+        // message.error('response.data.msg')
 
         return Promise.reject(response.data)
     },
     (error) => {
         if (error.response && error.response.data) {
             const msg = error.response.data.message
-            message.error(msg)
+            message.error(msg || '接口异常')
             // eslint-disable-next-line no-console
             console.error(`[Axios Error]`, error.response)
         } else {
-            message.error(error)
+            message.error(error.message)
         }
         return Promise.reject(error)
     }
@@ -94,9 +99,9 @@ axios.interceptors.response.use(
 export default {
     /** get请求 */
     get: (url: string, params?: any, config?: AxiosRequestConfig<any>) =>
-        axios.get<any, responseType, any>(url, { params, ...config }),
+        axios.get<any, any, any>(url, { params, ...config }),
 
     /** post请求 */
     post: (url: string, data?: any, config?: AxiosRequestConfig<any>) =>
-        axios.post<any, responseType, any>(url, { data, ...config })
+        axios.post<any, any, any>(url, { data, ...config })
 }

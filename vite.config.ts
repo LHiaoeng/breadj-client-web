@@ -25,6 +25,17 @@ export default defineConfig(({ mode, command }) => {
                 algorithm: 'gzip',
                 ext: '.gz'
             }),
+            // importToCDN({
+            //     prodUrl: '//unpkg.com/{name}@{version}/{path}',
+            //     modules: [
+            //         autoComplete('vue'),
+            //         {
+            //             name: 'vue-router',
+            //             var: 'VueRouter',
+            //             path: '//unpkg.com/vue-router@4.0.12/dist/vue-router.global.js'
+            //         }
+            //     ]
+            // }),
             Components({
                 resolvers: [
                     AntDesignVueResolver({
@@ -72,10 +83,15 @@ export default defineConfig(({ mode, command }) => {
             // 请求代理
             proxy: {
                 '/dev': {
-                    target: 'https://suggest.taobao.com',
+                    target: 'https://cn.bing.com',
                     changeOrigin: true,
                     // 路径重写，去掉/dev
                     rewrite: (path) => path.replace(/^\/dev/, '')
+                },
+                '/bing-api': {
+                    target: 'http://erp.yicasoft.com', // 修改为另一个接口的基础URL
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/bing-api/, '')
                 }
             }
         },
