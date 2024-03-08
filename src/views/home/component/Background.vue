@@ -68,6 +68,7 @@ watch(isVideoPlay, (newValue) => {
 const defaultBackground: Background = {
     type: 'video',
     url: './animated-bilgewater.webm',
+    // url: 'https://game.gtimg.cn/images/lol/universe/v1/assets/blt3fc71202462d4990-bilgewater-splashvideo.webm',
     title: '比尔吉沃特',
     titleLink: 'https://yz.lol.qq.com/zh_CN/region/bilgewater/',
     copyright: '英雄联盟',
@@ -77,6 +78,9 @@ const defaultBackground: Background = {
 }
 
 onMounted(() => {
+    background.value = defaultBackground
+    return
+
     const req: BingRequest = {
         format: 'js',
         idx: -1,

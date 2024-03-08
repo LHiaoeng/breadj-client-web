@@ -56,21 +56,26 @@ export async function getBingImageList(req: BingRequest): Promise<Background[]> 
  */
 export async function getAllBingImageList(paramsList: BingRequest[]): Promise<Background[]> {
     try {
-        // 使用Map来存储结果，以保证结果的唯一性
-        const resultMap = new Map<any, any>()
+        /// 使用对象来存储每个请求的结果
+        const results: { [index: number]: Background[] } = {}
 
-        // 循环发起多次请求
+        // 循环发起多次请求，并保持顺序
         await Promise.all(
-            paramsList.map(async (params) => {
-                const data = await getBingImageList(params)
-                data.forEach((item: any) => {
-                    resultMap.set(item.urlBase, item) // 假设每个数据项有一个唯一的id属性
-                })
+            paramsList.map(async (params, index) => {
+                results[index] = await getBingImageList(params)
             })
         )
 
-        // 将Map转换为数组并返回
-        return Array.from(resultMap.values())
+        return Array.from(
+            // 使用Map来确保唯一性
+            new Map(
+                // 将所有结果数组合并为一个数组
+                paramsList
+                    .flatMap((params) => results[paramsList.indexOf(params)] || [])
+                    // 使用urlBase属性作为Map的键，确保唯一性
+                    .map((item) => [item.urlBase, item])
+            ).values()
+        )
     } catch (error) {
         return []
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, toRefs, watch } from 'vue'
+import { onMounted, ref, toRefs, watch } from 'vue'
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons-vue'
 import {
     useBackgroundStore,
@@ -27,6 +27,7 @@ if (background.value) {
 
 function initBingGallery(): void {
     if (bingBackgroundList.value.length > 0) {
+        selectedBackgroundIndex.value = background.value.urlBase
         return
     }
 
@@ -43,8 +44,6 @@ function initBingGallery(): void {
         { ...baseBingReq, idx: 8 }
     ]).then((res) => {
         backgroundStore.setBingBackgroundList(res)
-
-        console.log('bingBackgroundList', bingBackgroundList.value)
     })
 }
 function initGallery(): void {
@@ -59,6 +58,10 @@ watch(modalOpen, () => {
     }
 })
 
+onMounted(() => {
+    initGallery()
+})
+
 // 配置对象，用于存储要替换的键值对
 const resolutionMapping = {
     'w=320': 'w=3840',
@@ -68,17 +71,17 @@ const resolutionMapping = {
 const setBackground = () => {
     // 检查 selectedBackground 是否定义，以及它是否有 url 属性
     if (selectedBackground.value && typeof selectedBackground.value.url === 'string') {
-        let { url } = selectedBackground.value
-        // 使用循环和配置对象进行高效的替换
-        Object.entries(resolutionMapping).forEach(([search, replace]) => {
-            url = url.replace(search, replace)
-        })
+        const { url } = selectedBackground.value
 
-        console.log('url', url)
-        // 检查替换后的URL是否与原始URL不同
-        if (url !== selectedBackground.value.url) {
-            selectedBackground.value.url = url
-            background.value = selectedBackground.value
+        let url4k = url
+
+        // 使用reduce方法逐步应用替换
+        url4k = Object.entries(resolutionMapping).reduce((acc, [search, replace]) => {
+            return acc.replace(search, replace)
+        }, url4k)
+
+        if (url4k !== background.value.url) {
+            background.value = { ...selectedBackground.value, url: url4k }
         }
     } else {
         // 可以在这里处理 selectedBackground 或者 url 属性未定义的情况
@@ -108,14 +111,18 @@ const selectImage = (index: string) => {
                     autoplay
                     loop
                     muted
-                    src="https://prod-streaming-video-msn-com.akamaized.net/73165e4b-2d93-4cb0-bdc2-4ef05acbc704/8a74a05a-60c3-44a1-9363-31d8d85fd82c.mp4"
-                    poster="https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA12PJYI.img"
+                    :src="selectedBackground.url"
                 ></video>
                 <div class="playbackButtonSection"></div>
             </div>
             <div class="informationSection">
                 <div class="title">{{ selectedBackground.title }}</div>
-                <div class="attribution">{{ selectedBackground.description }}</div>
+                <a-typography-paragraph
+                    class="attribution"
+                    :ellipsis="{ rows: 3, tooltip: selectedBackground.description }"
+                    :content="selectedBackground.description"
+                />
+
                 <div class="copyright">© 版权 {{ selectedBackground.copyright }}</div>
                 <a-flex gap="small" class="backgroundDispositionControls">
                     <a-button type="primary" @click="setBackground">应用</a-button>
@@ -147,7 +154,6 @@ const selectImage = (index: string) => {
                 :preview="false"
                 @click="selectImage(item.urlBase)"
             >
-                <div>0000</div>
             </a-image>
         </a-flex>
     </a-flex>

@@ -50,15 +50,33 @@ const showModal = () => {
     open.value = true
 }
 
-const downloadFile = () => {
-    const a = document.createElement('a')
-    // const urlPath = window.URL.createObjectURL(new Blob([source.value], { type: 'video/mp4' }))
-    a.href = background.value.url
-    a.target = '_blank'
-    a.download = background.value.title
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
+// 解析文件名和格式的函数
+function parseFileNameAndExtension(url: string) {
+    const parts = url.split('/')
+    const fileNameWithExtension = parts[parts.length - 1]
+    const fileNameParts = fileNameWithExtension.split('.')
+    const fileName = fileNameParts.slice(0, -1).join('.')
+    const extension = fileNameParts[fileNameParts.length - 1]
+    return { fileName, extension }
+}
+
+// 下载文件的函数
+function downloadFile() {
+    const { url, title } = background.value
+    const { fileName, extension } = parseFileNameAndExtension(url)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `${title || fileName}.${extension}`
+
+    // 判断是否同源，不同源则在新标签页中打开资源
+    if (
+        /^(http|https):\/\/.*/.test(url as string) &&
+        window.location.origin !== new URL(url).origin
+    ) {
+        window.open(url, '_blank')
+    } else {
+        link.click()
+    }
 }
 </script>
 
