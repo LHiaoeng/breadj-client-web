@@ -8,6 +8,7 @@ import {
 } from '@/store/modules/BackgroundStore'
 import { storeToRefs } from 'pinia'
 import { BingRequest, getAllBingImageList } from '@/api/background/bingService'
+import lolBackgroundData from '@/json/lolBackgroundJson.json'
 
 const props = defineProps<{
     modalOpen: boolean
@@ -15,6 +16,7 @@ const props = defineProps<{
 
 const { modalOpen } = toRefs(props)
 const backgroundSource = ref(1)
+const backgroundList = ref([])
 
 const backgroundStore = useBackgroundStore()
 const { background, bingBackgroundList } = storeToRefs(backgroundStore)
@@ -27,6 +29,7 @@ if (background.value) {
 
 function initBingGallery(): void {
     if (bingBackgroundList.value.length > 0) {
+        backgroundList.value = bingBackgroundList.value
         selectedBackgroundIndex.value = background.value.urlBase
         return
     }
@@ -43,12 +46,24 @@ function initBingGallery(): void {
         { ...baseBingReq, idx: 0 },
         { ...baseBingReq, idx: 8 }
     ]).then((res) => {
+        backgroundList.value = res
         backgroundStore.setBingBackgroundList(res)
     })
 }
+
+const backgroundSourceChange = (e) => {
+    if (e.target.value === 1) {
+        backgroundList.value = bingBackgroundList.value
+    } else {
+        backgroundList.value = lolBackgroundData
+    }
+}
+
 function initGallery(): void {
     if (backgroundSource.value === 1) {
         initBingGallery()
+    } else {
+        backgroundList.value = lolBackgroundData
     }
 }
 
@@ -91,7 +106,7 @@ const setBackground = () => {
 
 const selectImage = (index: string) => {
     selectedBackgroundIndex.value = index
-    selectedBackground.value = bingBackgroundList.value.find(({ urlBase }) => urlBase === index)
+    selectedBackground.value = backgroundList.value.find(({ urlBase }) => urlBase === index)
 }
 </script>
 
@@ -133,7 +148,11 @@ const selectImage = (index: string) => {
         </a-flex>
         <a-flex class="backgroundDisplaySettings">
             <span class="backgroundSectionHeading">背景</span>
-            <a-radio-group class="backgroundSources" v-model:value="backgroundSource">
+            <a-radio-group
+                class="backgroundSources"
+                v-model:value="backgroundSource"
+                @change="backgroundSourceChange"
+            >
                 <a-radio-button
                     v-for="item in backgroundSourceList"
                     :key="item.key"
@@ -145,7 +164,7 @@ const selectImage = (index: string) => {
         <a-flex wrap="wrap" gap="8" class="backgroundSelectionSection">
             <a-image
                 v-bind:class="{ selected: item.urlBase === selectedBackgroundIndex }"
-                v-for="item in bingBackgroundList"
+                v-for="item in backgroundList"
                 :key="item.urlBase"
                 :src="item.url"
                 :alt="item.description"

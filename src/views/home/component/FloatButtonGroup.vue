@@ -6,7 +6,8 @@ import {
     PictureOutlined,
     ArrowsAltOutlined,
     ShrinkOutlined,
-    DownloadOutlined
+    DownloadOutlined,
+    EyeOutlined
 } from '@ant-design/icons-vue'
 import { useBackgroundStore } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
@@ -78,35 +79,54 @@ function downloadFile() {
         link.click()
     }
 }
+
+const visible = ref<boolean>(false)
+const setVisible = (value): void => {
+    visible.value = value
+}
 </script>
 
 <template>
-    <a-flex class="container" gap="small" :vertical="vertical" :justify="justify">
-        <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
-            ><DownloadOutlined
-        /></a-button>
-        <a-button
-            :size="btnSize"
-            type="text"
-            @click="togglePlayPause"
-            :title="isVideoPlay ? '暂停视频' : '播放背景'"
-            v-if="background.type === 'video'"
-        >
-            <component :is="getPlayPauseIcon()" />
-        </a-button>
-        <a-button :size="btnSize" type="text" title="编辑背景" @click="showModal"
-            ><PictureOutlined
-        /></a-button>
-        <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
-            ><component :is="getBackgroundShowIcon()"
-        /></a-button>
-        <a-modal v-model:open="open" :footer="null" width="830px">
-            <BackgroundGallery :modalOpen="open" />
-            <template #title>
-                <div class="backgroundGalleryHeading">自定义背景</div>
-            </template>
-        </a-modal>
-    </a-flex>
+    <div>
+        <a-flex class="container" gap="small" :vertical="vertical" :justify="justify">
+            <a-button :size="btnSize" type="text" title="预览背景" @click="() => setVisible(true)"
+                ><EyeOutlined
+            /></a-button>
+            <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
+                ><DownloadOutlined
+            /></a-button>
+            <a-button
+                :size="btnSize"
+                type="text"
+                @click="togglePlayPause"
+                :title="isVideoPlay ? '暂停视频' : '播放背景'"
+                v-if="background.type === 'video'"
+            >
+                <component :is="getPlayPauseIcon()" />
+            </a-button>
+            <a-button :size="btnSize" type="text" title="编辑背景" @click="showModal"
+                ><PictureOutlined
+            /></a-button>
+            <a-button :size="btnSize" type="text" title="展开背景" @click="toggleOverlay"
+                ><component :is="getBackgroundShowIcon()"
+            /></a-button>
+        </a-flex>
+        <div class="hideComponent">
+            <a-modal v-model:open="open" :footer="null" width="830px">
+                <BackgroundGallery :modalOpen="open" />
+                <template #title>
+                    <div class="backgroundGalleryHeading">自定义背景</div>
+                </template>
+            </a-modal>
+            <a-image
+                :preview="{
+                    visible,
+                    onVisibleChange: setVisible
+                }"
+                :src="background.url"
+            />
+        </div>
+    </div>
 </template>
 
 <style scoped lang="scss">
@@ -121,8 +141,12 @@ function downloadFile() {
     }
 }
 
-.backgroundGalleryHeading {
-    font-weight: 600;
-    font-size: 24px;
+.hideComponent {
+    display: none;
+
+    .backgroundGalleryHeading {
+        font-weight: 600;
+        font-size: 24px;
+    }
 }
 </style>
