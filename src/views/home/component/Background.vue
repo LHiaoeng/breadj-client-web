@@ -78,8 +78,8 @@ const defaultBackground: Background = {
 }
 
 onMounted(() => {
-    background.value = defaultBackground
-    return
+    // background.value = defaultBackground
+    // return
 
     const req: BingRequest = {
         format: 'js',
