@@ -112,7 +112,7 @@ const setVisible = (value): void => {
             /></a-button>
         </a-flex>
         <div class="hideComponent">
-            <a-modal v-model:open="open" :footer="null" width="830px">
+            <a-modal v-model:open="open" :footer="null" width="830px" :destroyOnClose="false">
                 <BackgroundGallery :modalOpen="open" />
                 <template #title>
                     <div class="backgroundGalleryHeading">自定义背景</div>

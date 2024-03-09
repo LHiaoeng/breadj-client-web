@@ -9,6 +9,18 @@ import Footer from '@/views/home/component/Footer.vue'
 
 const store = useMainLayoutStore()
 const { isShowMainLayout } = storeToRefs(store)
+
+// 在页面加载完成后计算首屏时间
+window.addEventListener('load', () => {
+    const performanceEntries = performance.getEntriesByType('paint')
+    const fcpEntry = performanceEntries.find((entry) => entry.name === 'first-contentful-paint')
+    if (fcpEntry) {
+        const fcpTime = fcpEntry.startTime
+        console.log('首屏时间 (FCP):', fcpTime, '毫秒')
+    } else {
+        console.warn('无法获取首屏时间')
+    }
+})
 </script>
 
 <template>
