@@ -1,6 +1,11 @@
 <template>
     <div class="background-container" v-if="background">
-        <img v-if="background.type === 'image'" :src="background.url" alt="background" />
+        <img
+            v-if="background.type === 'image'"
+            :src="background.url"
+            alt="background"
+            @load="handleBackgroundLoaded"
+        />
         <video
             ref="backgroundVideoRef"
             v-else-if="background.type === 'video'"
@@ -113,6 +118,10 @@ onMounted(() => {
         })
     }
 })
+
+const handleBackgroundLoaded = () => {
+    console.log('background loaded')
+}
 </script>
 
 <style scoped lang="scss">
