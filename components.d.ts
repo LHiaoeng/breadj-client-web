@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AButton: typeof import('ant-design-vue/es')['Button']
+    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     AFlex: typeof import('ant-design-vue/es')['Flex']
     AImage: typeof import('ant-design-vue/es')['Image']
     AInputSearch: typeof import('ant-design-vue/es')['InputSearch']
@@ -16,6 +17,7 @@ declare module 'vue' {
     ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
     ASelect: typeof import('ant-design-vue/es')['Select']
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
+    ASpace: typeof import('ant-design-vue/es')['Space']
     ATypographyParagraph: typeof import('ant-design-vue/es')['TypographyParagraph']
     PlaceholderImage: typeof import('./src/components/common/PlaceholderImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

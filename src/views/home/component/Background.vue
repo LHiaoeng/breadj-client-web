@@ -106,6 +106,7 @@ onMounted(() => {
             // 当天23:59:59 过期
             const endOfDayTimestamp = dayjs(new Date()).endOf('day').valueOf()
             backgroundStore.setBackgroundExpire(endOfDayTimestamp)
+            backgroundStore.setBingBackgroundList([])
         }
     }
 

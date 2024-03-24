@@ -1,7 +1,35 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const isFixedFooter = ref<boolean>(true)
+
+function handleScroll() {
+    // 根据页面滚动状态修改 isFixedFooter 的值
+    isFixedFooter.value = document.body.scrollHeight < window.innerHeight
+    console.log('document.body.scrollHeight', document.body.scrollHeight)
+    console.log('window.innerHeight', window.innerHeight)
+    console.log('isFixedFooter', isFixedFooter.value)
+}
+
+const defaultClasses = 'footer'
+const additionalClasses = () => {
+    return {
+        dynamicFooter: isFixedFooter.value
+        // showFooter: isFixedFooter.value
+    }
+}
+
+onMounted(() => {
+    console.log('document.body.scrollHeight', document.body.scrollHeight)
+    console.log('window.innerHeight', window.innerHeight)
+    console.log('isFixedFooter', isFixedFooter.value)
+    // 监听页面滚动事件
+    window.addEventListener('scroll', handleScroll)
+})
+</script>
 
 <template>
-    <footer class="footer dynamicFooter showFooter">
+    <footer :class="['footer', { 'dynamicFooter showFooter': isFixedFooter }]">
         <div class="wrapper">
             <!--            <div class="copyright">© 2024 BreadJ</div>-->
             <div class="links">
@@ -16,6 +44,7 @@
 .footer {
     width: 100%;
     min-width: 768px;
+    height: 36px;
     padding: 0 10%;
     position: relative;
     white-space: nowrap;

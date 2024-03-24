@@ -38,9 +38,6 @@ window.addEventListener('load', () => {
 .mainLayout {
     display: flex;
     flex-direction: column;
-    width: 100vw;
-    overflow: hidden;
-    //height: 100vh;
 
     .overlayGradient {
         width: 100%;

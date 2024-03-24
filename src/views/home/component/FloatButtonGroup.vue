@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import {
     PlayCircleOutlined,
     PauseCircleOutlined,
@@ -84,11 +84,105 @@ const visible = ref<boolean>(false)
 const setVisible = (value): void => {
     visible.value = value
 }
+
+const targetElement = ref<HTMLElement | null>(null)
+
+// 检测指定元素的背景颜色
+const checkBackgroundColor = () => {
+    console.log(document.querySelector('.container'))
+    if (targetElement.value) {
+        const computedStyle = window.getComputedStyle(document.querySelector('.container'))
+        const { backgroundColor } = computedStyle
+        console.log('指定元素的背景颜色:', backgroundColor)
+    } else {
+        console.error('指定元素不存在')
+    }
+}
+
+// 获取指定位置的主要颜色
+const analyzeMainColors = () => {
+    // Get reference to the content area
+    const contentArea = targetElement.value
+
+    // Create a canvas element
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    // Set canvas dimensions
+    canvas.width = contentArea.offsetWidth
+    canvas.height = contentArea.offsetHeight
+
+    console.log('contentArea.offsetWidth:', contentArea.offsetWidth)
+    console.log('contentArea.offsetHeight:', contentArea.offsetHeight)
+
+    // // Draw content onto the canvas
+    // ctx.drawImage(0, 0, contentArea.offsetWidth, contentArea.offsetHeight)
+    //
+    // // Get pixel data
+    // const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // const pixels = imageData.data
+    //
+    // // Analyze colors
+    // const colorCounts = {}
+    // for (let i = 0; i < pixels.length; i += 4) {
+    //     const r = pixels[i]
+    //     const g = pixels[i + 1]
+    //     const b = pixels[i + 2]
+    //     const color = `rgb(${r},${g},${b})`
+    //
+    //     // Count color occurrences
+    //     if (colorCounts[color]) {
+    //         colorCounts[color]++
+    //     } else {
+    //         colorCounts[color] = 1
+    //     }
+    // }
+    //
+    // // Find the most common color
+    // let maxCount = 0
+    // let mainColor = ''
+    // for (const color in colorCounts) {
+    //     if (colorCounts[color] > maxCount) {
+    //         maxCount = colorCounts[color]
+    //         mainColor = color
+    //     }
+    // }
+    //
+    // // Output the main color
+    // console.log('Main color:', mainColor)
+}
+
+// 在组件挂载后开始定时检测背景颜色
+onMounted(() => {
+    analyzeMainColors()
+    // const element = document.querySelector('.container')
+    console.log('targetElement:', targetElement.value)
+    const element = targetElement.value.$el
+    console.log('element:', element)
+
+    if (element) {
+        const rect = element.getBoundingClientRect()
+
+        console.log('Element position:', rect)
+        console.log('Element top:', rect.top)
+        console.log('Element left:', rect.left)
+        console.log('Element right:', rect.right)
+        console.log('Element bottom:', rect.bottom)
+        console.log('Element width:', rect.width)
+        console.log('Element height:', rect.height)
+    }
+})
 </script>
 
 <template>
     <div>
-        <a-flex class="container" gap="small" :vertical="vertical" :justify="justify">
+        <a-flex
+            class="container"
+            gap="small"
+            :vertical="vertical"
+            :justify="justify"
+            ref="targetElement"
+        >
             <a-button :size="btnSize" type="text" title="预览背景" @click="() => setVisible(true)"
                 ><EyeOutlined
             /></a-button>

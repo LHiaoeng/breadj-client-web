@@ -8,11 +8,11 @@ interface BackgroundSourceType {
 export const backgroundSourceList: BackgroundSourceType[] = [
     {
         key: 1,
-        tab: '必应'
+        tab: '小必'
     },
     {
         key: 2,
-        tab: '英雄联盟'
+        tab: 'lol'
     }
 ]
 

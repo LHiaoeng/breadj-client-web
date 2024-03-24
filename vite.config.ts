@@ -12,7 +12,16 @@ export default defineConfig(({ mode, command }) => {
     // eslint-disable-next-line no-unused-vars
     const env = loadEnv(mode, process.cwd())
 
-    let plugins: (PluginOption | PluginOption[])[] = [vue()]
+    let plugins: (PluginOption | PluginOption[])[] = [
+        vue(),
+        Components({
+            resolvers: [
+                AntDesignVueResolver({
+                    importStyle: false // css in js
+                })
+            ]
+        })
+    ]
 
     // 打包时的配置
     if (command === 'build') {
@@ -24,25 +33,24 @@ export default defineConfig(({ mode, command }) => {
                 threshold: 10240,
                 algorithm: 'gzip',
                 ext: '.gz'
-            }),
+            })
             // importToCDN({
-            //     prodUrl: '//unpkg.com/{name}@{version}/{path}',
+            //     // prodUrl: '//unpkg.zhimg.com/{name}@{version}/{path}',
             //     modules: [
-            //         autoComplete('vue'),
+            //         // autoComplete('vue'),
+            //         // autoComplete('axios'),
+            //         // {
+            //         //     name: 'vue',
+            //         //     var: 'Vue',
+            //         //     path: '//unpkg.zhimg.com/vue@3/dist/vue.esm-browser.js'
+            //         // },
             //         {
             //             name: 'vue-router',
             //             var: 'VueRouter',
-            //             path: '//unpkg.com/vue-router@4.0.12/dist/vue-router.global.js'
+            //             path: '//unpkg.zhimg.com/vue-router@4.0.12/dist/vue-router.global.js'
             //         }
             //     ]
-            // }),
-            Components({
-                resolvers: [
-                    AntDesignVueResolver({
-                        importStyle: false // css in js
-                    })
-                ]
-            })
+            // })
         ])
     }
     return {
