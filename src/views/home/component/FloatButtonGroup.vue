@@ -183,11 +183,13 @@ onMounted(() => {
             :justify="justify"
             ref="targetElement"
         >
-            <a-button :size="btnSize" type="text" title="预览背景" @click="() => setVisible(true)"
+            <a-button
+                :size="btnSize"
+                v-if="background.type === 'image'"
+                type="text"
+                title="预览背景"
+                @click="() => setVisible(true)"
                 ><EyeOutlined
-            /></a-button>
-            <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
-                ><DownloadOutlined
             /></a-button>
             <a-button
                 :size="btnSize"
@@ -198,6 +200,9 @@ onMounted(() => {
             >
                 <component :is="getPlayPauseIcon()" />
             </a-button>
+            <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
+                ><DownloadOutlined
+            /></a-button>
             <a-button :size="btnSize" type="text" title="编辑背景" @click="showModal"
                 ><PictureOutlined
             /></a-button>

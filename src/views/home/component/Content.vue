@@ -28,11 +28,11 @@ interface Engine {
 const engines: Array<Engine> = [
     {
         id: 'google',
-        name: '小谷',
+        name: '谷歌',
         url: 'https://www.google.com/search?q='
     },
-    { id: 'bing', name: '小必', url: 'https://www.bing.com/search?q=' },
-    { id: 'baidu', name: '小度', url: 'https://www.baidu.com/s?wd=' }
+    { id: 'bing', name: '必应', url: 'https://www.bing.com/search?q=' },
+    { id: 'baidu', name: '百度', url: 'https://www.baidu.com/s?wd=' }
 ]
 
 const onSearch = (searchValue: string, e: MouseEvent) => {

@@ -5,7 +5,7 @@ import { SettingOutlined } from '@ant-design/icons-vue'
 <template>
     <header>
         <a-flex class="headerEnd">
-            <a-button type="text" size="small"><SettingOutlined /></a-button>
+            <!--            <a-button type="text" size="small"><SettingOutlined /></a-button>-->
         </a-flex>
     </header>
 </template>

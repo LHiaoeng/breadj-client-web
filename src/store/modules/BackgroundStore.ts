@@ -8,11 +8,11 @@ interface BackgroundSourceType {
 export const backgroundSourceList: BackgroundSourceType[] = [
     {
         key: 1,
-        tab: '小必'
+        tab: '必应'
     },
     {
         key: 2,
-        tab: 'lol'
+        tab: '英雄联盟'
     }
 ]
 
@@ -20,6 +20,7 @@ export interface Background {
     url: string
     urlBase: string
     type: 'image' | 'video'
+    poster?: string
     copyright?: string
     copyrightLink?: string
     title?: string

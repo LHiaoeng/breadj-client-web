@@ -33,24 +33,33 @@ export default defineConfig(({ mode, command }) => {
                 threshold: 10240,
                 algorithm: 'gzip',
                 ext: '.gz'
+            }),
+            importToCDN({
+                // prodUrl: '//unpkg.zhimg.com/{name}@{version}/{path}',
+                modules: [
+                    // autoComplete('vue'),
+                    // autoComplete('axios'),
+                    // {
+                    //     name: 'ant-design-vue',
+                    //     var: 'ant-design-vue',
+                    //     path: 'dist/antd.min.js',
+                    //     css: 'dist/reset.min.css'
+                    // },
+                    // {
+                    //     name: 'vue-router',
+                    //     var: 'VueRouter',
+                    //     path: 'dist/vue-router.global.min.js'
+                    // }
+                    // {
+                    //     name: 'dayjs',
+                    //     var: 'dayjs',
+                    //     path: [
+                    //         'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js',
+                    //         'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/locale/zh-cn.min.js'
+                    //     ]
+                    // }
+                ]
             })
-            // importToCDN({
-            //     // prodUrl: '//unpkg.zhimg.com/{name}@{version}/{path}',
-            //     modules: [
-            //         // autoComplete('vue'),
-            //         // autoComplete('axios'),
-            //         // {
-            //         //     name: 'vue',
-            //         //     var: 'Vue',
-            //         //     path: '//unpkg.zhimg.com/vue@3/dist/vue.esm-browser.js'
-            //         // },
-            //         {
-            //             name: 'vue-router',
-            //             var: 'VueRouter',
-            //             path: '//unpkg.zhimg.com/vue-router@4.0.12/dist/vue-router.global.js'
-            //         }
-            //     ]
-            // })
         ])
     }
     return {

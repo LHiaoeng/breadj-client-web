@@ -10,6 +10,7 @@
             ref="backgroundVideoRef"
             v-else-if="background.type === 'video'"
             :src="background.url"
+            :poster="background.poster"
             autoplay
             loop
             muted

@@ -31,10 +31,24 @@ onMounted(() => {
 <template>
     <footer :class="['footer', { 'dynamicFooter showFooter': isFixedFooter }]">
         <div class="wrapper">
-            <!--            <div class="copyright">© 2024 BreadJ</div>-->
             <div class="links">
                 <span>© 2024 BreadJ</span>
                 <a href="https://beian.miit.gov.cn" target="_blank">粤ICP备2024167887号-2</a>
+                <a
+                    class="ygawb"
+                    href="https://beian.mps.gov.cn/#/query/webSearch?code=44011102483768"
+                    target="_blank"
+                    ><img src="/gh.png" /> 粤公网安备44011102483768号</a
+                >
+                <br />
+                <a
+                    class="upyun"
+                    href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral"
+                    target="_blank"
+                    >本网站由
+                    <img src="/upyun.png" alt="又拍云" />
+                    提供CDN加速/云存储服务</a
+                >
             </div>
         </div>
     </footer>
@@ -44,7 +58,6 @@ onMounted(() => {
 .footer {
     width: 100%;
     min-width: 768px;
-    height: 36px;
     padding: 0 10%;
     position: relative;
     white-space: nowrap;
@@ -61,6 +74,7 @@ onMounted(() => {
         .links {
             display: inline-block;
             margin-top: 5px;
+            line-height: 20px;
             a {
                 color: #aaa;
                 margin: 0 5px;
@@ -68,6 +82,16 @@ onMounted(() => {
                 &:hover {
                     text-decoration: underline;
                 }
+            }
+
+            .ygawb img {
+                width: 16px;
+                vertical-align: top;
+                object-fit: contain;
+            }
+
+            .upyun img {
+                width: 50px;
             }
         }
     }
