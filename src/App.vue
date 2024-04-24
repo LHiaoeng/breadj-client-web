@@ -4,12 +4,12 @@
 import { ref } from 'vue'
 import type { Locale } from 'ant-design-vue/es/locale-provider'
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
-import 'dayjs/locale/zh-cn'
-import dayjs from 'dayjs'
+// import locale_zh from 'dayjs/locale/zh-cn'
+// import dayjs from 'dayjs'
 
 const locale = ref<Locale>(zhCN)
 
-dayjs.locale('zh-cn')
+// dayjs.locale('zh-cn')
 </script>
 
 <template>

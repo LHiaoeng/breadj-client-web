@@ -21,6 +21,7 @@ export interface Background {
     urlBase: string
     type: 'image' | 'video'
     poster?: string
+    previewImg?: string
     copyright?: string
     copyrightLink?: string
     title?: string
