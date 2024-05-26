@@ -30,6 +30,22 @@ export interface Background {
     sourceType?: number // 背景来源
 }
 
+export interface Wallpaper {
+    id?: number
+    type?: number
+    url: string
+    urlBase: string
+    poster?: string
+    previewImg?: string
+    copyright?: string
+    copyrightLink?: string
+    title?: string
+    titleLink?: string
+    description?: string
+    source?: number
+    launchTime?: string
+}
+
 export const useBackgroundStore = defineStore('BackgroundStore', {
     state: () => ({
         isVideoPlay: false,

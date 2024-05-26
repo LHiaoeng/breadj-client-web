@@ -10,6 +10,7 @@ import { storeToRefs } from 'pinia'
 import { BingRequest, getAllBingImageList } from '@/api/background/bingService'
 import lolBackgroundData from '@/json/lolBackgroundJson.json'
 import PlaceholderImage from '@/components/common/PlaceholderImage.vue'
+import { getWallpaperPage } from '@/api/background'
 
 const props = defineProps<{
     modalOpen: boolean
@@ -18,6 +19,7 @@ const props = defineProps<{
 const { modalOpen } = toRefs(props)
 const backgroundSource = ref(1)
 const backgroundList = ref([])
+const wallpaperList = ref([])
 
 const backgroundStore = useBackgroundStore()
 const { background, bingBackgroundList } = storeToRefs(backgroundStore)
@@ -52,11 +54,20 @@ function initBingGallery(): void {
     })
 }
 
+function initLolGallery(): void {
+    getWallpaperPage({}).then((res) => {
+        console.log(res.data)
+        wallpaperList.value = res.data.records
+    })
+}
+
 const backgroundSourceChange = (e) => {
     if (e.target.value === 1) {
         backgroundList.value = bingBackgroundList.value
+    } else if (wallpaperList.value.length === 0) {
+        initLolGallery()
     } else {
-        backgroundList.value = lolBackgroundData
+        backgroundList.value = wallpaperList.value
     }
 }
 
@@ -64,7 +75,7 @@ function initGallery(): void {
     if (backgroundSource.value === 1) {
         initBingGallery()
     } else {
-        backgroundList.value = lolBackgroundData
+        initLolGallery()
     }
 }
 

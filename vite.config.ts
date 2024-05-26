@@ -5,8 +5,6 @@ import viteCompression from 'vite-plugin-compression'
 import importToCDN, { autoComplete } from 'vite-plugin-cdn-import'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
-import commonjs from '@rollup/plugin-commonjs' // 引入commojs
-import requireTransform from 'vite-plugin-require-transform' // 引入require
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -15,7 +13,6 @@ export default defineConfig(({ mode, command }) => {
     const env = loadEnv(mode, process.cwd())
 
     let plugins: (PluginOption | PluginOption[])[] = [
-        commonjs(),
         // 我的入口文件是ts类型，所以下面必须加上.ts$，否则在main.ts无法使用require
         // requireTransform({
         //     fileRegex: /.js$|.vue$|.png$|.ts$|.jpg$/
@@ -118,8 +115,14 @@ export default defineConfig(({ mode, command }) => {
         // 开发服务器配置
         server: {
             host: '0.0.0.0',
+            port: 9527,
             // 请求代理
             proxy: {
+                '/api': {
+                    target: 'http://localhost:8080',
+                    changeOrigin: true,
+                    rewrite: (path) => path.replace(/^\/api/, '')
+                },
                 '/dev': {
                     target: 'https://cn.bing.com',
                     changeOrigin: true,
