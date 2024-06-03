@@ -1,42 +1,43 @@
 import { defineStore } from 'pinia'
 
-interface BackgroundSourceType {
+export interface BackgroundSourceType {
     key: number
     tab: string
 }
 
 export const backgroundSourceList: BackgroundSourceType[] = [
     {
-        key: 1,
+        key: 2,
         tab: '必应'
     },
     {
-        key: 2,
+        key: 1,
         tab: '英雄联盟'
     }
 ]
 
-export interface Background {
-    url: string
-    urlBase: string
-    type: 'image' | 'video'
-    poster?: string
-    previewImg?: string
-    copyright?: string
-    copyrightLink?: string
-    title?: string
-    titleLink?: string
-    description?: string
-    sourceType?: number // 背景来源
+export interface BackgroundTypeType {
+    key: number
+    tab: string
 }
+
+export const backgroundTypeList: BackgroundTypeType[] = [
+    {
+        key: 1,
+        tab: '图片'
+    },
+    {
+        key: 2,
+        tab: '视频'
+    }
+]
 
 export interface Wallpaper {
     id?: number
     type?: number
     url: string
-    urlBase: string
+    urlBase?: string
     poster?: string
-    previewImg?: string
     copyright?: string
     copyrightLink?: string
     title?: string
@@ -44,27 +45,24 @@ export interface Wallpaper {
     description?: string
     source?: number
     launchTime?: string
+    bingCountry?: string
 }
 
 export const useBackgroundStore = defineStore('BackgroundStore', {
     state: () => ({
         isVideoPlay: false,
-        background: {} as Background,
-        backgroundExpire: 0, // 过期时间。-1:不过期
-        bingBackgroundList: [] as Background[]
+        background: {} as Wallpaper,
+        backgroundExpire: 0 // 过期时间。-1:不过期
     }),
     actions: {
         setVideoPlay(isVideoPlay: boolean) {
             this.isVideoPlay = isVideoPlay
         },
-        setBackground(background: Background) {
+        setBackground(background: Wallpaper) {
             this.background = background
         },
         setBackgroundExpire(expire: number) {
             this.backgroundExpire = expire
-        },
-        setBingBackgroundList(bingBackgroundList: Background[]) {
-            this.bingBackgroundList = bingBackgroundList
         }
     },
     persist: true

@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { Wallpaper } from '@/store/modules/BackgroundStore'
 
 export interface WallpaperPageRequest {
     page?: number
@@ -11,8 +12,10 @@ export interface WallpaperPageRequest {
     launchTimeEnd?: string
 }
 
-const BASE_URL: string = `${import.meta.env.VITE_REQUEST_BASE_URL}`
-
+export interface WallpaperPageResponse {
+    records?: Wallpaper[]
+    total?: number
+}
 export async function getWallpaperPage(req: WallpaperPageRequest): Promise<any> {
-    return request.get(`${BASE_URL}/wallpaper/page`, req)
+    return request.get('/wallpaper/page', req)
 }

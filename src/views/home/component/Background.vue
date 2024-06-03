@@ -1,14 +1,15 @@
 <template>
     <div class="background-container" v-if="background">
         <img
-            v-if="background.type === 'image'"
+            v-if="background.type === 1"
             :src="background.url"
             alt="background"
             @load="handleBackgroundLoaded"
+            referrerpolicy="no-referrer"
         />
         <video
             ref="backgroundVideoRef"
-            v-else-if="background.type === 'video'"
+            v-else-if="background.type === 2"
             :src="background.url"
             :poster="background.poster"
             autoplay
@@ -38,13 +39,14 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 
-import { BingRequest, getBingImageList } from '@/api/background/bingService'
-import { useBackgroundStore, Background } from '@/store/modules/BackgroundStore'
+import { BingRequest, getBingWallpapers } from '@/api/background/bingService'
+import { useBackgroundStore, Wallpaper } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
 import FloatButtonGroup from '@/views/home/component/FloatButtonGroup.vue'
 import { storeToRefs } from 'pinia'
 import { ExportOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
+import { loginPath } from '@/config'
 
 const backgroundStore = useBackgroundStore()
 const mainLayoutStore = useMainLayoutStore()
@@ -71,10 +73,9 @@ watch(isVideoPlay, (newValue) => {
     }
 })
 
-const defaultBackground: Background = {
-    type: 'video',
+const defaultBackground: Wallpaper = {
+    type: 2,
     url: './animated-bilgewater.webm',
-    // url: 'https://game.gtimg.cn/images/lol/universe/v1/assets/blt3fc71202462d4990-bilgewater-splashvideo.webm',
     title: '比尔吉沃特',
     titleLink: 'https://yz.lol.qq.com/zh_CN/region/bilgewater/',
     copyright: '英雄联盟',
@@ -84,30 +85,28 @@ const defaultBackground: Background = {
 }
 
 onMounted(() => {
-    // background.value = defaultBackground
-    // return
-
     const req: BingRequest = {
         format: 'js',
         idx: -1,
         n: 1,
-        uhd: 1,
-        uhdwidth: 3840,
-        uhdheight: 2160
+        uhd: 1
     }
 
-    if (backgroundExpire.value !== -1) {
+    if (!background.value || backgroundExpire.value !== -1) {
         const nowTimestamp = Date.now()
 
         if (backgroundExpire.value < nowTimestamp) {
-            getBingImageList(req).then((res: Background[]) => {
-                background.value = res.length > 0 ? res[0] : defaultBackground
-            })
+            getBingWallpapers(req)
+                .then((res: Wallpaper[]) => {
+                    background.value = res.data.length > 0 ? res.data[0] : defaultBackground
+                })
+                .catch(() => {
+                    background.value = defaultBackground
+                })
 
             // 当天23:59:59 过期
             const endOfDayTimestamp = dayjs(new Date()).endOf('day').valueOf()
             backgroundStore.setBackgroundExpire(endOfDayTimestamp)
-            backgroundStore.setBingBackgroundList([])
         }
     }
 

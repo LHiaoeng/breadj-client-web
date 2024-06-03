@@ -46,32 +46,32 @@ export default defineConfig(({ mode, command }) => {
             importToCDN({
                 // prodUrl: '//unpkg.zhimg.com/{name}@{version}/{path}',
                 modules: [
-                    autoComplete('vue'),
-                    {
-                        name: 'vue-demi', // 安装vue-demi并导入 因为pinia中有用vue依赖中的vue-demi
-                        var: 'VueDemi',
-                        path: 'lib/index.iife.min.js'
-                    },
-                    autoComplete('axios'),
+                    // autoComplete('vue'),
                     // {
-                    //     name: 'ant-design-vue',
-                    //     var: 'antd',
-                    //     path: 'dist/antd.min.js',
-                    //     css: 'dist/reset.min.css'
+                    //     name: 'vue-demi', // 安装vue-demi并导入 因为pinia中有用vue依赖中的vue-demi
+                    //     var: 'VueDemi',
+                    //     path: 'lib/index.iife.min.js'
                     // },
-                    {
-                        name: 'vue-router',
-                        var: 'VueRouter',
-                        path: 'dist/vue-router.global.min.js'
-                    },
-                    {
-                        name: 'dayjs',
-                        var: 'dayjs',
-                        path: [
-                            'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js',
-                            'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/locale/zh-cn.min.js'
-                        ]
-                    }
+                    // autoComplete('axios'),
+                    // // {
+                    // //     name: 'ant-design-vue',
+                    // //     var: 'antd',
+                    // //     path: 'dist/antd.min.js',
+                    // //     css: 'dist/reset.min.css'
+                    // // },
+                    // {
+                    //     name: 'vue-router',
+                    //     var: 'VueRouter',
+                    //     path: 'dist/vue-router.global.min.js'
+                    // },
+                    // {
+                    //     name: 'dayjs',
+                    //     var: 'dayjs',
+                    //     path: [
+                    //         'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js',
+                    //         'https://cdn.jsdelivr.net/npm/dayjs@1.11.10/locale/zh-cn.min.js'
+                    //     ]
+                    // }
                 ]
             })
         ])
@@ -118,21 +118,10 @@ export default defineConfig(({ mode, command }) => {
             port: 9527,
             // 请求代理
             proxy: {
-                '/api': {
+                '/rest': {
                     target: 'http://localhost:8080',
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/api/, '')
-                },
-                '/dev': {
-                    target: 'https://cn.bing.com',
-                    changeOrigin: true,
-                    // 路径重写，去掉/dev
-                    rewrite: (path) => path.replace(/^\/dev/, '')
-                },
-                '/bing-api': {
-                    target: 'http://erp.yicasoft.com', // 修改为另一个接口的基础URL
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/bing-api/, '')
+                    changeOrigin: true
+                    // rewrite: (path) => path.replace(/^\/api/, '')
                 }
             }
         },

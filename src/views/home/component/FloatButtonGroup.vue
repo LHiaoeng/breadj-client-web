@@ -101,7 +101,7 @@ onMounted(() => {})
         >
             <a-button
                 :size="btnSize"
-                v-if="background.type === 'image'"
+                v-if="background.type === 1"
                 type="text"
                 title="预览背景"
                 @click="() => setVisible(true)"
@@ -112,7 +112,7 @@ onMounted(() => {})
                 type="text"
                 @click="togglePlayPause"
                 :title="isVideoPlay ? '暂停视频' : '播放背景'"
-                v-if="background.type === 'video'"
+                v-if="background.type === 2"
             >
                 <component :is="getPlayPauseIcon()" />
             </a-button>
