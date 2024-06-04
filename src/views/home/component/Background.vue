@@ -19,17 +19,18 @@
         <div class="museumCard" v-if="!isShowMainLayout">
             <div class="museumCardCreditsContainer">
                 <div class="museumCardTitleContainer">
-                    <a class="museumCardTitle" :href="background.titleLink" target="_blank"
-                        >{{ background.title }}<ExportOutlined
-                    /></a>
+                    <export-out-url
+                        class="museumCardTitle"
+                        :content="background.title"
+                        :link="background.titleLink"
+                    />
                     <p class="museumCardCredits backgroundGallery">{{ background.description }}</p>
                 </div>
-                <div class="copyrightContainer">
-                    © 版权
-                    <a :href="background.copyrightLink" target="_blank"
-                        >{{ background.copyright }}<ExportOutlined
-                    /></a>
-                </div>
+                <CopyrightUrl
+                    class="copyrightContainer"
+                    :copyright="background.copyright"
+                    :copyright-link="background.copyrightLink"
+                />
             </div>
             <FloatButtonGroup justify="flex-end" />
         </div>
@@ -47,6 +48,8 @@ import { storeToRefs } from 'pinia'
 import { ExportOutlined } from '@ant-design/icons-vue'
 import dayjs from 'dayjs'
 import { loginPath } from '@/config'
+import CopyrightUrl from '@/components/common/CopyrightUrl.vue'
+import ExportOutUrl from '@/components/common/ExportOutUrl.vue'
 
 const backgroundStore = useBackgroundStore()
 const mainLayoutStore = useMainLayoutStore()
@@ -186,11 +189,6 @@ const handleBackgroundLoaded = () => {
                 text-decoration: none;
             }
 
-            .museumCardTitle:hover {
-                cursor: pointer;
-                text-decoration: underline;
-            }
-
             .museumCardCredits {
                 color: rgba(255, 255, 255, 0.54);
                 font-size: 13px;
@@ -202,16 +200,6 @@ const handleBackgroundLoaded = () => {
             color: rgba(255, 255, 255, 0.54);
             padding-left: 12px;
             padding-bottom: 10px;
-
-            a {
-                color: rgba(255, 255, 255, 0.54);
-                text-decoration: none;
-            }
-
-            a:hover {
-                cursor: pointer;
-                text-decoration: underline;
-            }
         }
     }
 

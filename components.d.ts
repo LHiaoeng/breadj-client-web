@@ -21,6 +21,8 @@ declare module 'vue' {
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
     ASpace: typeof import('ant-design-vue/es')['Space']
     ATypographyParagraph: typeof import('ant-design-vue/es')['TypographyParagraph']
+    CopyrightUrl: typeof import('./src/components/common/CopyrightUrl.vue')['default']
+    ExportOutUrl: typeof import('./src/components/common/ExportOutUrl.vue')['default']
     PlaceholderImage: typeof import('./src/components/common/PlaceholderImage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

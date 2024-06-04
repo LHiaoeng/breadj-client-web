@@ -21,7 +21,7 @@ const backgroundPageData = reactive<WallpaperPageResponse>({})
 const backgroundStore = useBackgroundStore()
 const { background } = storeToRefs(backgroundStore)
 const selectedBackgroundIndex = ref(background.value.id)
-const selectedBackground = ref(null)
+const selectedBackground = ref<Wallpaper>(null)
 
 if (background.value) {
     selectedBackground.value = background.value
@@ -136,7 +136,26 @@ const handleImageLoad = (title: string) => {
                     :content="selectedBackground.description"
                 />
 
-                <div class="copyright">© {{ selectedBackground.copyright }}</div>
+                <div class="copyright">
+                    <a-space>
+                        <span
+                            >©
+                            {{
+                                selectedBackground.copyright &&
+                                selectedBackground.copyright.startsWith('©')
+                                    ? selectedBackground.copyright.substring(1)
+                                    : selectedBackground.copyright
+                            }}</span
+                        >
+                        <span
+                            >发布时间：{{
+                                selectedBackground.launchTime
+                                    ? selectedBackground.launchTime.substring(0, 10)
+                                    : '未知'
+                            }}</span
+                        >
+                    </a-space>
+                </div>
                 <a-flex gap="small" class="backgroundDispositionControls">
                     <a-button type="primary" @click="setBackground">应用</a-button>
                     <!--                    <a-button><LikeOutlined />赞</a-button>-->
@@ -254,6 +273,7 @@ const handleImageLoad = (title: string) => {
         .attribution {
             margin-top: 12px;
             font-size: 12px;
+            min-height: 58px;
         }
         .copyright {
             font-size: 12px;
