@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRefs, watch, reactive } from 'vue'
+import { onMounted, ref, toRefs, reactive, watchEffect } from 'vue'
 import { LikeOutlined, DislikeOutlined, VideoCameraOutlined } from '@ant-design/icons-vue'
 import {
     useBackgroundStore,
@@ -10,6 +10,7 @@ import {
 import { storeToRefs } from 'pinia'
 import PlaceholderImage from '@/components/common/PlaceholderImage.vue'
 import { getWallpaperPage, WallpaperPageRequest, WallpaperPageResponse } from '@/api/background'
+import { debounce } from 'lodash'
 
 const props = defineProps<{
     modalOpen: boolean
@@ -35,61 +36,63 @@ const pageSizeOptions = ref<string[]>(['14', '21', '28', '42', '56'])
 const currentPage = ref<number>(1)
 const currentPageSize = ref<number>(14)
 const keyword = ref<string>('')
+const currentType = ref<number>(undefined)
+const currentSource = ref<number>(undefined)
 
-const wallpaperPageRequest = ref<WallpaperPageRequest>({
+const wallpaperPageRequest = reactive<WallpaperPageRequest>({
     page: currentPage.value,
     size: currentPageSize.value,
-    source: undefined,
-    type: undefined,
+    source: currentType.value,
+    type: currentSource.value,
     title: keyword.value
 })
 
 const reset = () => {
     currentPage.value = 1
-    wallpaperPageRequest.value.type = undefined
-    wallpaperPageRequest.value.source = undefined
+    currentType.value = undefined
+    currentSource.value = undefined
     keyword.value = ''
-    wallpaperPageRequest.value.title = ''
+    wallpaperPageRequest.title = ''
 }
 
-function initGallery(): void {
-    getWallpaperPage(wallpaperPageRequest.value).then((res) => {
+const onTypeChange = () => {
+    currentPage.value = 1
+}
+
+const onSourceChange = () => {
+    currentPage.value = 1
+}
+
+const initGallery = debounce(() => {
+    getWallpaperPage(wallpaperPageRequest).then((res) => {
         Object.assign(backgroundPageData, res.data)
     })
-}
+}, 300)
 
-watch(
-    wallpaperPageRequest.value,
-    (newVal, oldVal) => {
-        initGallery()
-    },
-    { deep: true }
-)
+watchEffect(() => {
+    Object.assign(wallpaperPageRequest, {
+        page: currentPage.value,
+        size: currentPageSize.value,
+        title: keyword.value,
+        type: currentType.value,
+        source: currentSource.value
+    })
 
-const onPageChange = (page: number, pageSize: number) => {
-    wallpaperPageRequest.value.page = currentPage.value
-}
+    initGallery()
+})
 
 const onShowSizeChange = (current: number, pageSize: number) => {
     currentPage.value = 1
-    wallpaperPageRequest.value.size = pageSize
 }
 
 const onKeywordChange = () => {
-    wallpaperPageRequest.value.page = 1
-    wallpaperPageRequest.value.title = keyword.value
+    currentPage.value = 1
 }
 
 const getImageSrc = (wallpaper: Wallpaper) => {
     if (!wallpaper) return ''
     return wallpaper.poster && wallpaper.poster.trim() !== '' ? wallpaper.poster : wallpaper.url
 }
-
-watch(modalOpen, () => {
-    if (modalOpen.value) {
-        initGallery()
-    }
-})
 
 onMounted(() => {
     initGallery()
@@ -173,7 +176,7 @@ const handleImageLoad = (title: string) => {
                         allow-clear
                         @change="onKeywordChange"
                     />
-                    <a-radio-group v-model:value="wallpaperPageRequest.type">
+                    <a-radio-group @change="onTypeChange" v-model:value="currentType">
                         <a-radio-button
                             v-for="item in backgroundTypeList"
                             :key="item.key"
@@ -181,7 +184,7 @@ const handleImageLoad = (title: string) => {
                             >{{ item.tab }}</a-radio-button
                         >
                     </a-radio-group>
-                    <a-radio-group v-model:value="wallpaperPageRequest.source">
+                    <a-radio-group v-model:value="currentSource" @change="onSourceChange">
                         <a-radio-button
                             v-for="item in backgroundSourceList"
                             :key="item.key"
@@ -224,13 +227,11 @@ const handleImageLoad = (title: string) => {
                 :total="backgroundPageData.total"
                 v-model:page-size-options="pageSizeOptions"
                 @showSizeChange="onShowSizeChange"
-                @change="onPageChange"
                 size="small"
                 :show-total="(total, range) => `第${range[0]}-${range[1]}张，共${total}张`"
             >
                 <template #buildOptionText="props">
-                    <span v-if="props.value !== '50'">{{ props.value }}张/页</span>
-                    <span v-else>全部</span>
+                    <span>{{ props.value }}张/页</span>
                 </template>
             </a-pagination>
         </a-flex>
@@ -276,9 +277,12 @@ const handleImageLoad = (title: string) => {
             min-height: 58px;
         }
         .copyright {
-            font-size: 12px;
             margin-top: 12px;
             opacity: 0.55;
+
+            :deep(.ant-space) {
+                font-size: 12px;
+            }
         }
 
         .backgroundDispositionControls {

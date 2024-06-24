@@ -9,7 +9,6 @@
 
 import Axios, { AxiosResponse, AxiosRequestConfig } from 'axios'
 import { message } from 'ant-design-vue'
-import Mock from 'mockjs'
 
 // 接口返回统一格式
 type responseType = {
@@ -34,20 +33,8 @@ axios.interceptors.request.use(
             // 如果是以http/https开头的则不添加VITE_REQUEST_BASE_URL
             url = config.url as string
             // eslint-disable-next-line no-underscore-dangle
-        } else if (Mock._mocked[import.meta.env.VITE_REQUEST_BASE_URL + config.url]) {
-            // 如果是mock数据也不添加VITE_REQUEST_BASE_URL,Mock._mocked上记录有所有已设置的mock规则
-            url = import.meta.env.VITE_REQUEST_BASE_URL + config.url
         } else {
-            /**
-             * 开启mock时需要去掉mock路径,不能影响正常接口了。
-             * 如果碰巧你接口是 /api/mock/xxx这种,那VITE_REQUEST_BASE_URL就配置/api/mock/mock吧
-             */
-
-            if (config.url.includes('/bing-api')) {
-                url = config.url
-            } else {
-                url = import.meta.env.VITE_REQUEST_BASE_URL.replace(/\/mock$/, '') + config.url
-            }
+            url = import.meta.env.VITE_REQUEST_BASE_URL + config.url
         }
 
         // 这里还可以添加token等等

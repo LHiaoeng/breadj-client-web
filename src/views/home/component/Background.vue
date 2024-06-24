@@ -167,14 +167,6 @@ const handleBackgroundLoaded = () => {
         padding: 8px 4px;
 
         .museumCardTitleContainer {
-            background: rgba(0, 0, 0, 0.77);
-            border-bottom: 1px solid transparent;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 400;
-            margin-bottom: 10px;
-            max-width: 384px;
             padding: 0px 12px;
 
             .museumCardTitle {
@@ -185,14 +177,14 @@ const handleBackgroundLoaded = () => {
                 font-size: 20px;
                 font-weight: 400;
                 line-height: 24px;
-                margin: 4px 0px;
+                margin: 4px 0;
                 text-decoration: none;
             }
 
             .museumCardCredits {
                 color: rgba(255, 255, 255, 0.54);
                 font-size: 13px;
-                margin: 10px 0px 12px !important;
+                margin: 10px 0 12px !important;
             }
         }
 
