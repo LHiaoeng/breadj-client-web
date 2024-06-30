@@ -19,3 +19,7 @@ export interface WallpaperPageResponse {
 export async function getWallpaperPage(req: WallpaperPageRequest): Promise<any> {
     return request.get('/wallpaper/page', req)
 }
+
+export async function getRandomWallpaper(req: WallpaperPageRequest): Promise<any> {
+    return request.get('/wallpaper/getRandomWallpaper', req)
+}

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
     PlayCircleOutlined,
     PauseCircleOutlined,
@@ -7,11 +7,13 @@ import {
     ArrowsAltOutlined,
     ShrinkOutlined,
     DownloadOutlined,
-    EyeOutlined
+    EyeOutlined,
+    ReloadOutlined
 } from '@ant-design/icons-vue'
 import { useBackgroundStore } from '@/store/modules/BackgroundStore'
 import { useMainLayoutStore } from '@/store/modules/MainLayoutStore'
 import { storeToRefs } from 'pinia'
+import { getRandomWallpaper } from '@/api/background'
 import BackgroundGallery from '@/views/home/component/BackgroundGallery.vue'
 
 defineProps<{
@@ -80,8 +82,14 @@ function downloadFile() {
     }
 }
 
+const randomBackground = () => {
+    getRandomWallpaper({}).then((res) => {
+        store.setBackground(res.data)
+    })
+}
+
 const visible = ref<boolean>(false)
-const setVisible = (value): void => {
+const setVisible = (value: boolean): void => {
     visible.value = value
 }
 
@@ -119,6 +127,9 @@ onMounted(() => {})
             <a-button :size="btnSize" type="text" title="下载背景" @click="downloadFile"
                 ><DownloadOutlined
             /></a-button>
+            <a-button :size="btnSize" type="text" title="随机背景" @click="randomBackground"
+                ><ReloadOutlined />
+            </a-button>
             <a-button :size="btnSize" type="text" title="编辑背景" @click="showModal"
                 ><PictureOutlined
             /></a-button>
@@ -146,6 +157,10 @@ onMounted(() => {})
 
 <style scoped lang="scss">
 .container {
+    background: rgba(0, 0, 0, 0.77);
+    //border-bottom: 1px solid transparent;
+    border-radius: 4px;
+
     button {
         color: white;
         width: auto;
