@@ -5,6 +5,7 @@ import viteCompression from 'vite-plugin-compression'
 import importToCDN, { autoComplete } from 'vite-plugin-cdn-import'
 import Components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode, command }) => {
@@ -18,6 +19,7 @@ export default defineConfig(({ mode, command }) => {
         //     fileRegex: /.js$|.vue$|.png$|.ts$|.jpg$/
         // }), // 配置require
         vue(),
+        visualizer({ open: true }),
         Components({
             resolvers: [
                 AntDesignVueResolver({
@@ -134,7 +136,12 @@ export default defineConfig(({ mode, command }) => {
                 output: {
                     chunkFileNames: 'static/js/[name]-[hash].js',
                     entryFileNames: 'static/js/[name]-[hash].js',
-                    assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
+                    assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+                    manualChunks(id) {
+                        if (id.includes('node_modules')) {
+                            return 'vendor'
+                        }
+                    }
                 }
             }
             /** 配置打包问js,css,img分别在不同文件夹end */
