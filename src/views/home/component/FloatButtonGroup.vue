@@ -158,8 +158,8 @@ onMounted(() => {})
 <style scoped lang="scss">
 .container {
     background: rgba(0, 0, 0, 0.77);
-    //border-bottom: 1px solid transparent;
     border-radius: 4px;
+    padding: 2px;
 
     button {
         color: white;
